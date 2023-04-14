@@ -1,12 +1,11 @@
-import torch
 import torch.nn as nn
-import torch.nn.functional as F
+
 
 class PolicyNN_60(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.layers = nn.Sequential(
+        self.linear_relu_stack = nn.Sequential(
             nn.Linear(60, 256),
             nn.ReLU(),
             nn.Linear(256, 128),
@@ -25,7 +24,7 @@ class PolicyNN_48(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.layers = nn.Sequential(
+        self.linear_relu_stack = nn.Sequential(
             nn.Linear(48, 256),
             nn.ReLU(),
             nn.Linear(256, 128),
@@ -45,7 +44,7 @@ class PolicyNN_24(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.layers = nn.Sequential(
+        self.linear_relu_stack = nn.Sequential(
             nn.Linear(24, 256),
             nn.ReLU(),
             nn.Linear(256, 128),
@@ -65,7 +64,7 @@ class PolicyNN_23(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.layers = nn.Sequential(
+        self.linear_relu_stack = nn.Sequential(
             nn.Linear(23, 256),
             nn.ReLU(),
             nn.Linear(256, 128),
@@ -84,7 +83,7 @@ class PolicyNN_108(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.layers = nn.Sequential(
+        self.linear_relu_stack = nn.Sequential(
             nn.Linear(108, 200),
             nn.ReLU(),
             nn.Linear(200, 400),
@@ -103,7 +102,7 @@ class PolicyNN_211(nn.Module):
     def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten()
-        self.layers = nn.Sequential(
+        self.linear_relu_stack = nn.Sequential(
             nn.Linear(211, 512),
             nn.ReLU(),
             nn.Linear(512, 512),
