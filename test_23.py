@@ -5,9 +5,7 @@ from models import PolicyNN_23
 from ray.train.torch import TorchTrainer
 import csv
 
-data = [
-    ["Model Dim#", "Batch Size","Number of GPUS", "Throughput"],
-]
+data = []
 def group_res( model_name, batch_size, num_gpu, result):
     iterations = result.metrics.get('training_iteration')
     time = result.metrics.get("time_total_s")
