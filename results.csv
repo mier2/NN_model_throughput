@@ -1,2 +1,2 @@
-Model Dim#,Number of GPUS,Throughput
-PolicyNN_60,1,119.55082217911495
+Model Dim#,Batch Size,Number of GPUS,Throughput
+PolicyNN_60,1,173.62655582403085

@@ -16,7 +16,7 @@ def train_func(config):
     input = torch.randn(1000, config["dim_num"])
     labels = torch.randn(1000, config["label_dim"])
     dataset = torch.utils.data.TensorDataset(input, labels)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=32)
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=config["batch_size"])
     dataloader = train.torch.prepare_data_loader(dataloader)
     
     
@@ -40,7 +40,7 @@ def train_func(config):
     
     
 #run the training model
-config = {"modelName": PolicyNN_60(), "num_epoch":1, "dim_num":60, "label_dim":8 }
+config = {"modelName": PolicyNN_60(), "num_epoch":1, "dim_num":60, "label_dim":8, "batch_size": 1024}
 trainer = TorchTrainer(
     train_loop_per_worker=train_func,
     train_loop_config=config,
@@ -61,7 +61,7 @@ print(result.metrics)
 
 
 
-batch_size = 32
+batch_size = 1024
 #ouput the throughput into a csv file
 iterations = result.metrics.get('training_iteration')
 time = result.metrics.get("time_total_s")
@@ -73,7 +73,7 @@ total_samples = batch_size * iterations
 throughput = total_samples/time
 
 data = [
-    ["Model Dim#", "Number of GPUS", "Throughput"],
+    ["Model Dim#", "Batch Size","Number of GPUS", "Throughput"],
     [model_name, num_gpu, throughput]
 ]
 
