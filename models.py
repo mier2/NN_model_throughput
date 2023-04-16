@@ -1,4 +1,47 @@
+import time
 import torch.nn as nn
+import torch
+from ray.air import session, Checkpoint, ScalingConfig, Result
+from ray import train
+import torch.distributed as dist
+
+def group_res( model_name, batch_size, num_gpu, result):
+    throughput = result.metrics.get("Throughput")
+    return [model_name,batch_size, num_gpu, throughput]
+
+def train_func(config):
+    #define the training model
+    model = train.torch.prepare_model(config["modelName"])
+    criterion = torch.nn.CrossEntropyLoss().cuda()
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+    
+    #generate toy data
+    input_size = config["batch_size"]
+    input_dim = config["dim_num"]
+    dummy_input = torch.randn(input_size, input_dim, device='cuda', dtype=torch.float32)
+    
+    
+    for i in range(config["num_epoch"]):
+        _ = model(dummy_input)
+        num_iters = 100
+        start_time = time.time()
+        for i in range(num_iters):
+            optimizer.zero_grad()
+            outputs = model(dummy_input)
+            loss = criterion(outputs, torch.zeros(input_size, dtype=torch.long, device=f'cuda'))
+            loss.backward()
+            for param in model.parameters():
+                dist.all_reduce(param.grad.data, op=dist.ReduceOp.SUM)
+            optimizer.step()
+        
+        end_time = time.time()
+        throughput = num_iters * input_size / (end_time - start_time)
+        checkpoint = Checkpoint.from_dict(
+                dict(epoch=i)
+                )
+        session.report({'Throughput':throughput}, checkpoint=checkpoint)
+        dist.destroy_process_group()
+        
 
 
 class PolicyNN_60(nn.Module):

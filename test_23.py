@@ -1,54 +1,12 @@
 import torch
 from ray.air import session, Checkpoint, ScalingConfig, Result
-from ray import train
-from models import PolicyNN_23
+from models import PolicyNN_23, train_func, group_res
 from ray.train.torch import TorchTrainer
 import csv
 
 data = []
-def group_res( model_name, batch_size, num_gpu, result):
-    iterations = result.metrics.get('training_iteration')
-    time = result.metrics.get("time_total_s")
-    total_samples = batch_size * iterations
-    throughput = total_samples/time
-    return [model_name,batch_size, num_gpu, throughput]
-    
-    
-    
-#traning model function
-def train_func(config):
-    #define the training model
-    model = train.torch.prepare_model(config["modelName"])
-    criterion = torch.nn.MSELoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-2)
-    
-    #generate toy data
-    input = torch.randn(1000, config["dim_num"])
-    labels = torch.randn(1000, config["label_dim"])
-    dataset = torch.utils.data.TensorDataset(input, labels)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=config["batch_size"])
-    dataloader = train.torch.prepare_data_loader(dataloader)
-    
-    
-    for i in range(config["num_epoch"]):
-        for X, y in dataloader:
-            pred = model.forward(X)
-            #compute loss
-            loss = criterion(pred,y)
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            state_dict = model.state_dict()
-            checkpoint = Checkpoint.from_dict(
-                dict(epoch=i,
-                    model_weights=state_dict)
-                )
-            session.report({}, checkpoint=checkpoint)
-        
-        
-        
-    
-    
+
+           
 #run the training model
 #1GPU
 #PolicyNN_23 with different batch size
