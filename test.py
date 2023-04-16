@@ -43,7 +43,7 @@ def train_func(config):
         session.report({'Throughput':throughput}, checkpoint=checkpoint)
         
 
-def get_throughput(modelName, dimNum, labelDim):
+def get_throughput(modelName, dimNum, labelDim, data):
     gpu_numbers = [1,2,4,8]
     for i in gpu_numbers:
         config = {"modelName": modelName, "num_epoch":1, "dim_num":dimNum, "label_dim":labelDim}
@@ -56,7 +56,7 @@ def get_throughput(modelName, dimNum, labelDim):
             )
         )
         result: Result = trainer.fit()
-        data_23.append(result.metrics.get("Throughput"))
+        data.append(result.metrics.get("Throughput"))
 
 data_23 = []
 data_24 = []
@@ -66,12 +66,12 @@ data_108 = []
 data_211 = []
 gpu_numbers=[1,2,4,8]    
 #run the training model
-get_throughput(PolicyNN_23(), 23, 9)
-get_throughput(PolicyNN_24(), 24, 3)
-get_throughput(PolicyNN_48(), 48, 12)
-get_throughput(PolicyNN_60(), 60, 8)
-get_throughput(PolicyNN_108(), 108, 21)
-get_throughput(PolicyNN_211(), 211, 20)
+get_throughput(PolicyNN_23(), 23, 9, data_23)
+get_throughput(PolicyNN_24(), 24, 3, data_24)
+get_throughput(PolicyNN_48(), 48, 12, data_48)
+get_throughput(PolicyNN_60(), 60, 8, data_60)
+get_throughput(PolicyNN_108(), 108, 21, data_108)
+get_throughput(PolicyNN_211(), 211, 20, data_211)
 
 
     
