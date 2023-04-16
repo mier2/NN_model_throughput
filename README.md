@@ -13,7 +13,7 @@ docker run --gpus all -it --name <container name> --user=root --ulimit memlock=-
 ## Run the models
 
 ```bash
-python test_<model dim number>.py
+python test.py
 ```
 
 ## Get results
