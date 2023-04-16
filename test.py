@@ -41,12 +41,12 @@ def train_func(config):
                 dict(epoch=i)
                 )
         session.report({'Throughput':throughput}, checkpoint=checkpoint)
-        dist.destroy_process_group()
+        
 
-def get_throughput(modelName):
+def get_throughput(modelName, dimNum, labelDim):
     gpu_numbers = [1,2,4,8]
     for i in gpu_numbers:
-        config = {"modelName": modelName, "num_epoch":1, "dim_num":23, "label_dim":9}
+        config = {"modelName": modelName, "num_epoch":1, "dim_num":dimNum, "label_dim":labelDim}
         trainer = TorchTrainer(
         train_loop_per_worker=train_func,
         train_loop_config=config,
@@ -59,19 +59,21 @@ def get_throughput(modelName):
         data_23.append(result.metrics.get("Throughput"))
 
 data_23 = []
-data_24 = [1]
-data_48 = [1]
-data_60 = [1]
-data_108 = [1]
-data_211 = [1]
+data_24 = []
+data_48 = []
+data_60 = []
+data_108 = []
+data_211 = []
 gpu_numbers=[1,2,4,8]    
 #run the training model
-get_throughput(PolicyNN_23())
-get_throughput(PolicyNN_24())
-get_throughput(PolicyNN_48())
-get_throughput(PolicyNN_60())
-get_throughput(PolicyNN_108())
-get_throughput(PolicyNN_211())
+get_throughput(PolicyNN_23(), 23, 9)
+get_throughput(PolicyNN_24(), 24, 3)
+get_throughput(PolicyNN_48(), 48, 12)
+get_throughput(PolicyNN_60(), 60, 8)
+get_throughput(PolicyNN_108(), 108, 21)
+get_throughput(PolicyNN_211(), 211, 20)
+
+
     
     
     
