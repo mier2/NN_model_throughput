@@ -44,7 +44,8 @@ def train_func(config):
         dist.destroy_process_group()
 
 def get_throughput(modelName):
-    for i in range(1,9):
+    gpu_numbers = [1,2,4,8]
+    for i in gpu_numbers:
         config = {"modelName": modelName, "num_epoch":1, "dim_num":23, "label_dim":9}
         trainer = TorchTrainer(
         train_loop_per_worker=train_func,
